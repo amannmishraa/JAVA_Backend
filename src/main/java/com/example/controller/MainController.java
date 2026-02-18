@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.model.Laptop;
-import com.example.repository.LaptopRepository;
+import com.example.service.LaptopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,66 +14,46 @@ import java.util.Optional;
 public class MainController {
 
     @Autowired
-    LaptopRepository lr;
+    LaptopService lr;
 
-    // POST to add a laptop
     @PostMapping("/add")
     public ResponseEntity<String> addLaptop(@RequestBody Laptop lp) {
-        // Check if the laptop is null before saving
-        if (lp == null) {
-            return ResponseEntity.badRequest().body("Laptop data is missing");
-        }
-
-        lr.save(lp);
+        lr.addLaptop(lp);
         return ResponseEntity.ok("Laptop added successfully");
     }
 
-    // GET all laptops
     @GetMapping("/list")
     public List<Laptop> list() {
-        return lr.findAll();
+        return lr.listLaptop();
     }
 
-    // GET one laptop by ID
     @GetMapping("/findOne/{index}")
     public ResponseEntity<Laptop> findOne(@PathVariable int index) {
-        Optional<Laptop> laptop = lr.findById(index);
-
-        if (laptop.isPresent()) {
-            return ResponseEntity.ok(laptop.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Laptop> laptop = lr.findOneLaptop(index);
+        return laptop.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // PUT to update an existing laptop
     @PutMapping("/update/{index}")
-    public ResponseEntity<Laptop> update(@PathVariable int index, @RequestBody Laptop newLaptop) {
-        Optional<Laptop> oldLaptop = lr.findById(index);
+    public ResponseEntity<Laptop> update(@PathVariable int index,
+                                         @RequestBody Laptop newLaptop) {
 
-        if (!oldLaptop.isPresent()) {
-            return ResponseEntity.notFound().build();  // Return 404 if laptop not found
-        }
+        Laptop updated = lr.updateLaptop(index, newLaptop);
 
-        Laptop laptop = oldLaptop.get();
-        laptop.setBrand(newLaptop.getBrand());
-        laptop.setModel(newLaptop.getModel());
-        laptop.setPrice(newLaptop.getPrice());
-        lr.save(laptop);
+        if (updated == null)
+            return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(laptop);  // Return the updated laptop
+        return ResponseEntity.ok(updated);
     }
 
-    // DELETE a laptop by ID
     @DeleteMapping("/delete/{index}")
     public ResponseEntity<String> delete(@PathVariable int index) {
-        Optional<Laptop> laptop = lr.findById(index);
-
-        if (!laptop.isPresent()) {
-            return ResponseEntity.notFound().build();  // Return 404 if laptop not found
-        }
-
-        lr.deleteById(index);
+        lr.deleteLaptop(index);
         return ResponseEntity.ok("Laptop deleted successfully");
+    }
+
+    @GetMapping("/findByBrand/{brand}")
+    public List<Laptop> findByBrandName(@PathVariable String brand) {
+        return lr.findByBrand(brand);
     }
 }
