@@ -18,7 +18,7 @@ public class MainController {
     }
 
     // Get all laptops
-    @GetMapping("/list")
+    @GetMapping("/listi")
     public List<Laptop> list() {
         return list;
     }
