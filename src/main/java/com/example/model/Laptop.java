@@ -1,54 +1,24 @@
 package com.example.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Laptop {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;  // Changed from int to Integer
+
     private String brand;
     private String model;
     private double price;
-
-    // Default Constructor
-    public Laptop() {
-    }
-
-    // Parameterized Constructor
-    public Laptop(int id, String brand, String model, double price) {
-        this.id = id;
-        this.brand = brand;
-        this.model = model;
-        this.price = price;
-    }
-
-    // Getters and Setters (Encapsulation)
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 }
