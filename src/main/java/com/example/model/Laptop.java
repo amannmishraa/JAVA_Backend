@@ -1,12 +1,9 @@
 package com.example.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -16,11 +13,20 @@ public class Laptop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;  // Changed from int to Integer
+    private Integer id;
 
-    private String brand;
     private String model;
-    private double price;
+    private Double price;
 
+    // MANY TO ONE
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    @JsonBackReference
+    private Brand brand;
 
+    // ONE TO ONE
+    @OneToOne(mappedBy = "laptop", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Warranty warranty;
 }
+
