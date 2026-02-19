@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.exceptions.ResourceNotFoundException;
 import com.example.model.Laptop;
 import com.example.repository.LaptopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,4 +21,11 @@ public class LaptopService {
     public List<Laptop> getAll() {
         return repo.findAll();
     }
+    public Laptop getById(Integer id) {
+        return repo.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Laptop not found with id: " + id));
+    }
+
+
 }

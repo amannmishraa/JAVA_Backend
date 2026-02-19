@@ -23,4 +23,9 @@ public class LaptopController {
     public List<Laptop> list() {
         return service.getAll();
     }
+
+    @GetMapping("/{id}")
+    public Laptop getById(@PathVariable Integer id) {
+        return service.getById(id);
+    }
 }
